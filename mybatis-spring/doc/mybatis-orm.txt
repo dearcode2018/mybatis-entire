@@ -1,0 +1,23 @@
+
+日期时间-类型说明
+mybatis 支持 java.util.Date 作为日期时间类型，根据resultMap中所指定的
+jdbcType = DATE / TIME /TIMESTAMP 来将日期时间值设置到相应的bean中，
+查询/插入/更新 也是如此，都是根据jdbcType来决定；因此mybatis只支持java
+类型的java.util.Date，并不支持java.sql中的日期时间类型!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

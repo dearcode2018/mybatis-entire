@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.3//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="">
+	
+	<!-- 实体映射 -->
+	<resultMap type="xx" id="xxResultMap">
+		<!-- 主键映射 -->
+		<id property="oid" javaType="Long" column="oid" jdbcType="NUMERIC" />
+		<result property="name" javaType="string" column="name" jdbcType="VARCHAR" />
+		<result property="credit" javaType="Double" column="credit" jdbcType="NUMERIC" />
+		<result property="birthday" javaType="date" column="birthday" jdbcType="DATE" />
+		<result property="address" javaType="string" column="address" jdbcType="VARCHAR" />
+		<collection property="" ></collection>
+	</resultMap>
+
+	<!--  -->
+	<sql id="xx">
+		<!-- 覆盖前缀 或 后缀，一般只用一个已经可以满足 insert 或 update 操作 -->
+		<trim prefix="" prefixOverrides="" suffix="" suffixOverrides="">
+			<if test="null != a">a,</if>
+			<if test="null != b and '' != b">b,</if>		
+		</trim>
+		<trim prefix="" prefixOverrides=",">
+			<if test="null != a">,a</if>
+			<if test="null != b and '' != b">,b</if>		
+		</trim>
+		<trim suffix="" suffixOverrides=",">
+			<if test="null != a">a,</if>
+			<if test="null != b and '' != b">b,</if>			
+		</trim>		
+	</sql>
+
+	<!-- 插入单个对象 -->
+	<insert id="insert" parameterType="">
+		<bind name="" value=""/>
+		
+	</insert>
+
+	<!-- 删除单个对象 -->
+	<delete id="delete">
+	</delete>
+	
+	<!-- 更新单个对象(全量) -->
+	<update id="update" parameterType="">
+		<selectKey keyProperty="" order="" resultType=""></selectKey>
+		UPDATE xx
+		<!-- 一般用在 update 中，可以省略set关键字，以及去除多余的逗号 -->
+		<set> <if test="null != a">a = #{a}, </if></set>
+		
+		<!-- 多余的and or会忽略掉，没有条件整个where语句被省略 -->
+		<where></where>
+		<choose>
+			<when test=""></when>
+			<when test=""></when>
+			<otherwise></otherwise>
+		</choose>
+		<!-- map key="ids" -->
+		<foreach collection="ids" item="item" index="index" open="("
+			separator="," close=")">
+			#{item}
+		</foreach> 
+	</update>
+
+	<!-- 获取单个对象  -->
+	<select id="get" resultMap="studentResultMap" parameterType="Long">
+		<include refid=""/>
+	</select>
+
+	
+	<!-- sql复用 -->
+	<sql id="searchWhere">
+		<if test="null != entity">
+			<if test="null != entity.name"> AND a.name LIKE '%' || #{entity.name} || '%' </if>
+			<if test="null != entity.startBirthday"> AND a.birthday <![CDATA[ >= ]]> #{entity.startBirthday} </if>
+			<if test="null != entity.endBirthday"> AND a.birthday <![CDATA[ <= ]]> #{entity.endBirthday} </if>
+			<if test="null != entity.address"> AND a.address LIKE '%' || #{entity.address} || '%' </if>
+		</if>
+	</sql>
+
+	<!-- 搜索符合条件的对象  -->
+	<select id="search" resultMap="studentResultMap" parameterType="pagerEntity">
+		SELECT t.* FROM 
+		(SELECT a.*, rowNum rNum FROM student a WHERE rowNum <![CDATA[ <= #{endIndex} ]]>
+	 	<include refid="searchWhere"/>
+		) t 
+		WHERE t.rNum <![CDATA[ >= #{startIndex} ]]>
+	</select>
+	
+	<!-- 符合搜索条件的对象个数 -->
+	<select id="searchDataSize" resultType="Long" parameterType="pagerEntity">
+		SELECT COUNT(*) FROM student a WHERE 1 = 1
+		<include refid="searchWhere"/>
+	</select>
+		
+	<!--  获取所有对象 -->
+	<select id="listAll" resultMap="studentResultMap">
+		<![CDATA[
+			SELECT a.* FROM student a
+			]]>
+	</select>
+	
+	<!--  获取最大的Id -->
+	<select id="getMaxId" resultType="Long">
+		<![CDATA[
+			SELECT max(a.oid) FROM student a
+			]]>
+	</select>
+	
+	<!--  多余的 -->
+	<select id="duoyu" resultType="Long">
+		<![CDATA[
+			]]>
+	</select>
+	
+</mapper>

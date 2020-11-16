@@ -1,0 +1,44 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.hua</groupId>
+		<artifactId>mybatis-entire</artifactId>
+		<version>0.0.1</version>
+	</parent>	
+	<artifactId>mybatis3</artifactId>
+	<packaging>jar</packaging>
+	<name>mybatis3</name>
+	<properties>
+		<mybatis.version>3.5.5</mybatis.version>
+		<commons.dbcp2.version>2.7.0</commons.dbcp2.version>	
+	</properties>
+		
+	<dependencies>
+
+		<dependency>
+			<groupId>com.hua</groupId>
+			<artifactId>mybatis-core</artifactId>
+			<version>${mybatis.core.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis-spring</artifactId>
+		</dependency>
+
+		<dependency>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-dbcp2</artifactId>
+		    <version>${commons.dbcp2.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mybatis.generator</groupId>
+			<artifactId>mybatis-generator-core</artifactId>
+		</dependency>	
+		
+	</dependencies>
+
+</project>

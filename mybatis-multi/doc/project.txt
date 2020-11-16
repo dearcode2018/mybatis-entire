@@ -1,0 +1,57 @@
+【项目信息】
+项目名称 : mybatis-multi
+中文名称 : 多数据源
+项目版本 : version 1.0
+
+主要技术 : 
+
+项目描述 : 
+
+项目备注 : 
+
+【项目规划】
+
+1) 多数据源方案
+a) 动态数据源，通过线程上下文变量切换来实现多个数据源共存和使用
+b) 声明多个数据源，标以不同的名称，根据名称来选择使用的数据源，例如在@Transactional中指定事务管理器的名称
+
+2) 事务超时时间设置
+ org.apache.ibatis.executor.statement.StatementUtil.applyTransactionTimeout
+ queryTimeout和transactionTimeout取较小值 设置到  statement.setQueryTimeout(transactionTimeout);
+ queryTimeout 取的是org.apache.ibatis.session.Configuration.setDefaultStatementTimeout();
+ transactionTimeout取的是DataSourceTransactionManager.setDefaultTimeout()或者@Transaction.timeout
+ transactionTimeout意义在于执行update statement之前的最大空闲时间，而StatementUtil.applyTransactionTimeout
+ 设置的值到了Statement的执行时间，对于有等待或执行超时的，事务会超时.
+
+3)
+
+4)
+
+5)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

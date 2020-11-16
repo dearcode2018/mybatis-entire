@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.3//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+	<!-- 数据库/数据源提供者 -->
+	<databaseIdProvider type="">
+		<property name="" value=""/>
+	</databaseIdProvider>
+
+	<!-- jdbc 参数配置 -->
+	<!-- org.apache.ibatis.builder.xml.XMLConfigBuilder.propertiesElement 方法读取配置 -->
+	<properties resource="conf/properties/jdbc.properties" url="">
+		<!-- 直接将属性键值对配置在此 -->
+		<property name="" value="" />
+	</properties>
+
+	<!-- 配置 org.apache.ibatis.session.Configuration 的其他属性  -->
+	<settings>
+		<!-- 全局映射器启用缓存 -->
+		<setting name="cacheEnabled" value="true" />
+		<!-- 查询时，关闭关联对象即时加载以提供性能 -->
+		<setting name="lazyLoadingEnabled" value="true"/>
+		<!-- 设置关联对象加载的形态，此处为按需加载字段(加载字段由SQL指定，不会加载关联表的所有字段，以提高性能) -->
+		<setting name="aggressiveLazyLoading" value="false"/>
+		<!-- 对于未知的SQL查询，允许返回不同的结果集以达到通用的效果 -->
+		<setting name="multipleResultSetsEnabled" value="true" />
+		<!-- 允许使用列标签代替列名 -->
+		<setting name="useColumnLabel" value="true"/>
+		<!-- 允许使用自定义的主键值，例如由程序生成的UUID32位编码作为键值，数据表的主键生成策略将被覆盖 -->
+		<setting name="useGeneratedKeys" value="true"/>
+		<!-- 给予被嵌套的resultMap以字段-属性的映射支持 org.apache.ibatis.session.AutoMappingBehavior.FULL -->
+		<setting name="autoMappingBehavior" value="FULL"/>
+		<!-- 批量更新操作，缓存SQL以提高性能 -->
+		<setting name="defaultExecutorType" value="BATCH"/>
+		<!-- 默认数据库超时时间 (单位: 秒) -->
+		<setting name="defaultStatementTimeout" value="25000"/>
+	</settings>
+
+	<!-- 实体类的别名 通过package, 可以直接指定package的名字， mybatis会自动扫描你指定包下面的javabean, 并且默认设置一个别名，默认的名字为： 
+		javabean 的[首字母小写] 的非限定类名来作为它的别名。 也可在javabean 加上注解@Alias 来自定义别名， 例如： @Alias(user) 
+		org.apache.ibatis.type.Alias <package name="com.dy.entity"/> -->
+	<typeAliases>
+		<!-- 扫描指定包下的类，也可以通过 typeAlias 来另外指定 -->
+		<package name="" />
+		<!-- <typeAlias type="" alias=""/> -->
+		<!-- 分页实体 -->
+		<typeAlias type="com.hua.entity.PagerEntity" alias="pagerEntity" />
+		<typeAlias type="com.hua.orm.entity.o2o.Person" alias="person" />
+	</typeAliases>
+
+	<!-- 类型处理器 -->
+	<typeHandlers>
+		<!-- 扫描指定包下的类，也可以通过 typeHandler 来另外指定 -->
+		<package name="" />
+		<typeHandler javaType="" jdbcType="" handler="" />
+	</typeHandlers>
+
+	<!-- -->
+	<objectFactory type="">
+		<property name="" value="" />
+	</objectFactory>
+
+	<!-- -->
+	<objectWrapperFactory type="">
+		<property name="" value="" />
+	</objectWrapperFactory>
+
+	<!-- 插件: 配置拦截器，切面化处理. -->
+	<plugins>
+		<plugin interceptor="">
+			<property name="" value="" />
+		</plugin>
+	</plugins>
+
+	<!-- 可以有多个环境，但是默认只有一个生效 -->
+	<!-- jdbc环境 -->
+	<environments default="development">
+		<environment id="development">
+			<!-- transactionManager org.apache.ibatis.transaction.jdbc.JdbcTransaction 
+				type属性值可以在 org.apache.ibatis.session.Configuration 中找到，例如 type="JDBC" -->
+			<transactionManager type="JDBC" />
+
+			<!-- 在org.apache.ibatis.datasource包下，寻找 DataSource实现类即可找到相应的属性 dataSource 
+				type属性值可以在 org.apache.ibatis.session.Configuration 中找到，例如 type="POOLED" -->
+			<dataSource type="POOLED">
+				<property name="driver" value="${driver}" />
+				<property name="url" value="${url}" />
+				<property name="username" value="${username}" />
+				<property name="password" value="${password}" />
+				<!-- 设置事务隔离级别 4: Connection.TRANSACTION.REPEATABLE_READ -->
+				<property name="defaultTransactionIsolationLevel" value="4" />
+			</dataSource>
+		</environment>
+	</environments>
+
+	<!-- 非注解的SQL映射文件配置，如果使用mybatis注解，则mapper无需配置，
+	但是若mybatis注解中包含@ResultMap注解，则mapper必须配置，给@ResultMap注解使用 -->
+	<!-- mapper映射 -->
+	<mappers>
+		<!-- 扫描指定包下的资源 -->
+		<package name="" />
+		<!-- 指定resource -->
+		<mapper resource="conf/xml/mapper/o2o/PersonMapper.xml" class=""
+			url="" />
+		<!-- 指定class -->
+		<!-- <mapper class="com.hua.mapper.o2o.PersonMapper" /> -->
+	</mappers>
+
+</configuration>

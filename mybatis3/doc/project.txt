@@ -1,0 +1,56 @@
+【项目信息】
+项目名称 : mybatis
+中文名称 : MyBatis
+项目版本 : version 1.0
+
+主要技术 : 
+
+项目描述 : 
+
+项目备注 : 
+
+【项目规划】
+
+1) MyBatis过程
+a) 解析/构造各个配置
+b) 每个线程/会话构造一个SqlSession，通过SqlSessionFactory.openSession()打开
+线程/会话结束后，SqlSession对象就销毁，SqlSessionFactory为单例.
+c) 构造SqlSession，使用现有的配置和环境，传入数据源和事务隔离级别/是否自动提交，new一个SqlSession对象
+d) 事务
+JDBC事务: 使用SqlSession可以commit/rollback
+托管事务: 通过外部逻辑来控制，不能通过SqlSession来操作
+e) 构造执行器Executor对象，从数据源中获取连接对象，创建Statement
+2)
+
+3)
+
+4)
+
+5)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

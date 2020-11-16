@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.3//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hua.mapper.CityMapper">
+
+	<!-- 二级缓存，配置到具体Mapper 
+		LRU: least recently use
+		flushInterval: 刷新间隔时间，单位: 毫秒，若不配置，则UpdateSQL执行时才被刷新.
+		size: 缓存数目
+		readOnly(其实是readWrite属性，历史兼容性原因没有修改):  true-可以修改缓存的数据，false-不能修改缓存，默认false，可以快速读取缓存.
+	-->
+	<cache eviction="LRU" flushInterval="5000" readOnly="false" size="500" type="MapperCache" />
+
+	<!--  flushCache="true" 刷新二级缓存，select方法默认是false，UpdateSQL默认是true -->
+	<select id="singleBeanNameParam" resultType="com.hua.vo.CityVo" useCache="true" flushCache="false">
+		SELECT a.* FROM city a
+			WHERE 
+			<if test="null != random">0 != #{random}</if>
+			<if test="null != fullName and '' != fullName"> AND a.fullName LIKE CONCAT('%', #{fullName}, '%') ESCAPE '/' </if>
+			<if test="null != id and '' != id">AND a.id = #{id}</if>
+			<if test="null != shortName and '' != shortName"> AND a.shortName LIKE CONCAT('%', #{shortName}, '%') ESCAPE '/' </if>
+	</select>
+
+	<!-- 在基本类型中，无论是单个还是多个，都必须通过@Param()标识其名称，才能通过名称的方式来引用， 否则，只能通过下标的方式来引用 Parameter 
+		'id' not found. Available parameters are [0, 1, 2, 3, param3, param4, param1, 
+		param2] 没有命名的参数，命名默认为param1, param2, ...，对应参数列表(从1开始)... -->
+
+	<!-- 单个基本类型的默认名称是value -->
+	<select id="singleBasicNoNameParam" resultType="com.hua.vo.CityVo">
+		SELECT a.* FROM city a
+		<where>
+			<if test="null != value and '' != value">a.id = #{value}</if>
+		</where>
+	</select>
+
+	<!--  -->
+	<select id="singleBasicNameParam" resultType="com.hua.vo.CityVo">
+		SELECT a.* FROM city a
+		<where>
+			<if test="null != id and '' != id">a.id = #{id}</if>
+		</where>
+	</select>
+
+	<select id="multipleBasicNoNameParam" resultType="com.hua.vo.CityVo">
+		SELECT a.* FROM city a
+		<!-- 没有命名的参数，命名默认为param1, param2, ...，对应参数列表(从1开始)... -->
+		<where>
+			<if test="null != param1 and '' != param1">a.id = #{param1}</if>
+			<if test="null != param2 and '' != param2"> AND a.name LIKE #{param2} ESCAPE '/'</if>
+			<if test="null != param3 and '' != param3"> AND a.shortName LIKE #{param3} ESCAPE '/' </if>
+			<if test="null != param4 and '' != param4"> AND a.fullName LIKE #{param4} ESCAPE '/' </if>
+		</where> 
+		<!-- 或者这种方式 -->
+ 		<where>
+			<if test="null != param1 and '' != param1">a.id = #{0}</if>
+			<if test="null != param2 and '' != param2"> AND a.name LIKE #{1} ESCAPE '/'</if>
+			<if test="null != param3 and '' != param3"> AND a.shortName LIKE #{2} ESCAPE '/' </if>
+			<if test="null != param4 and '' != param4"> AND a.fullName LIKE #{3} ESCAPE '/' </if>
+		</where>		 
+	</select>
+
+	<!-- -->
+	<select id="multipleBasicNameParam" resultType="com.hua.vo.CityVo">
+		SELECT a.* FROM city a
+		<where>
+			<if test="null != id and '' != id">a.id = #{id}</if>
+			<if test="null != name and '' != name"> AND a.name LIKE #{name} ESCAPE '/'  </if>
+			<if test="null != shortName and '' != shortName"> AND a.shortName LIKE #{shortName} ESCAPE '/'  </if>
+			<if test="null != fullName and '' != fullName"> AND a.fullName LIKE #{fullName} ESCAPE '/'  </if>
+		</where>
+	</select>
+
+	<!--  -->
+	<select id="singleMapNoNameParam" resultType="com.hua.vo.CityVo">
+		SELECT a.* FROM city a
+		<where>
+			<if test="null != id and '' != id">a.id = #{id}</if>
+			<if test="null != name and '' != name"> AND a.name LIKE #{name} ESCAPE '/' </if>
+			<if test="null != shortName and '' != shortName"> AND a.shortName LIKE #{shortName} ESCAPE '/' </if>
+			<if test="null != fullName and '' != fullName"> AND a.fullName LIKE #{fullName} ESCAPE '/' </if>
+		</where>
+	</select>
+
+	<select id="singleMapNameParam" resultType="com.hua.vo.CityVo">
+		SELECT a.* FROM city a
+		<where>
+			<if test="null != myMap.id and '' != myMap.id">a.id = #{myMap.id}</if>
+			<if test="null != myMap.name and '' != myMap.name"> AND a.name LIKE #{myMap.name} ESCAPE '/' </if>
+			<if test="null != myMap.shortName and '' != myMap.shortName"> AND a.shortName LIKE #{myMap.shortName} ESCAPE '/' </if>
+			<if test="null != myMap.fullName and '' != myMap.fullName"> AND a.fullName LIKE #{myMap.fullName} ESCAPE '/' </if>
+		</where>
+	</select>
+
+	<!-- -->
+	<select id="singleMapAllNoNameParam" parameterType="map"
+		resultType="com.hua.vo.CityVo">
+		SELECT a.* FROM city a
+		<where>
+			a.id IN
+			<!-- array -->
+			<foreach collection="idArray" open="(" close=")" separator="," item="idItem">
+				#{idItem}
+			</foreach>
+			AND a.province IN
+			<!-- list -->
+			<foreach collection="provinceList" open="(" close=")" separator="," item="provinceItem">
+				#{provinceItem}
+			</foreach>			
+			<!-- map -->
+			<if test="null != name and '' != name"> AND a.name LIKE #{name} ESCAPE '/' </if>
+			<!-- bean vo -->
+			<if test="null != vo and null != vo.shortName"> AND a.shortName LIKE #{vo.shortName} ESCAPE '/' </if>
+		</where>
+	</select>
+
+	<!-- -->
+	<select id="singleMapAllNameParam" parameterType="map"
+		resultType="com.hua.vo.CityVo">
+		SELECT a.* FROM city a
+		<where>
+			a.id IN
+			<!-- array -->
+			<foreach collection="myMap.idArray" open="(" close=")" separator="," item="idItem">
+				#{idItem}
+			</foreach>
+			AND a.province IN
+			<!-- list -->
+			<foreach collection="myMap.provinceList" open="(" close=")" separator="," item="provinceItem">
+				#{provinceItem}
+			</foreach>			
+			<!-- map -->
+			<if test="null != myMap.name and '' != myMap.name"> AND a.name LIKE #{myMap.name} ESCAPE '/' </if>
+			<!-- bean vo -->
+			<if test="null != myMap.vo and null != myMap.vo.shortName"> 
+			AND a.shortName LIKE #{myMap.vo.shortName} ESCAPE '/' </if>
+		</where>
+	</select>
+
+	<!-- -->
+	<select id="multipleMapNoNameParam" resultType="com.hua.vo.CityVo">
+		SELECT a.* FROM city a
+		<where>
+			(
+			<if test="null != param1.id and '' != param1.id">a.id = #{param1.id}</if>
+			<if test="null != param1.name and '' != param1.name"> AND a.name LIKE #{param1.name} ESCAPE '/' </if>
+			<if test="null != param1.shortName and '' != param1.shortName"> AND a.shortName LIKE #{param1.shortName} ESCAPE '/' </if>
+			<if test="null != param1.fullName and '' != param1.fullName"> AND a.fullName LIKE #{param1.fullName} ESCAPE '/' </if>
+			)
+			OR
+			(
+			<if test="null != param2.id and '' != param2.id">a.id = #{param2.id}</if>
+			<if test="null != param2.name and '' != param2.name"> AND a.name LIKE #{param2.name} ESCAPE '/' </if>
+			<if test="null != param2.shortName and '' != param2.shortName"> AND a.shortName LIKE #{param2.shortName} ESCAPE '/' </if>
+			<if test="null != param2.fullName and '' != param2.fullName"> AND a.fullName LIKE #{param2.fullName} ESCAPE '/' </if>
+			)
+		</where>
+	</select>
+
+	<!-- -->
+	<select id="multipleMapNameParam" resultType="com.hua.vo.CityVo">
+		SELECT a.* FROM city a
+		<where>
+			(
+			<if test="null != map1.id and '' != map1.id">a.id = #{map1.id}</if>
+			<if test="null != map1.name and '' != map1.name"> AND a.name LIKE #{map1.name} ESCAPE '/' </if>
+			<if test="null != map1.shortName and '' != map1.shortName"> AND a.shortName LIKE #{map1.shortName} ESCAPE '/' </if>
+			<if test="null != map1.fullName and '' != map1.fullName"> AND a.fullName LIKE #{map1.fullName} ESCAPE '/' </if>
+			)
+			OR
+			(
+			<if test="null != map2.id and '' != map2.id">a.id = #{map2.id}</if>
+			<if test="null != map2.name and '' != map2.name"> AND a.name LIKE #{map2.name} ESCAPE '/' </if>
+			<if test="null != map2.shortName and '' != map2.shortName"> AND a.shortName LIKE #{map2.shortName} ESCAPE '/' </if>
+			<if test="null != map2.fullName and '' != map2.fullName"> AND a.fullName LIKE #{map2.fullName} ESCAPE '/' </if>
+			)
+		</where>
+	</select>
+
+	<!-- -->
+	<select id="singleBeanNoNameParam" resultType="com.hua.vo.CityVo">
+		SELECT a.* FROM city a
+		<where>
+			<if test="null != id and '' != id">a.id = #{id}</if>
+			<if test="null != name and '' != name"> AND a.name LIKE #{name} ESCAPE '/' </if>
+			<if test="null != shortName and '' != shortName"> AND a.shortName LIKE #{shortName} ESCAPE '/' </if>
+			<if test="null != fullName and '' != fullName"> AND a.fullName LIKE #{fullName} ESCAPE '/' </if>
+		</where>
+	</select>
+
+	<!-- -->
+	<select id="multipleBeanNoNameParam" resultType="com.hua.vo.CityVo">
+		SELECT a.* FROM city a
+		<where>
+			(
+			<if test="null != param1.id and '' != param1.id">a.id = #{param1.id}</if>
+			<if test="null != param1.name and '' != param1.name"> AND a.name LIKE #{param1.name} ESCAPE '/' </if>
+			<if test="null != param1.shortName and '' != param1.shortName"> AND a.shortName LIKE #{param1.shortName} ESCAPE '/' </if>
+			<if test="null != param1.fullName and '' != param1.fullName"> AND a.fullName LIKE #{param1.fullName} ESCAPE '/' </if>
+			)
+			OR
+			(
+			<if test="null != param2.id and '' != param2.id">a.id = #{param2.id}</if>
+			<if test="null != param2.name and '' != param2.name"> AND a.name LIKE #{param2.name} ESCAPE '/' </if>
+			<if test="null != param2.shortName and '' != param2.shortName"> AND a.shortName LIKE #{param2.shortName} ESCAPE '/' </if>
+			<if test="null != param2.fullName and '' != param2.fullName"> AND a.fullName LIKE #{param2.fullName} ESCAPE '/' </if>
+			)
+		</where>
+	</select>
+
+	<!-- -->
+	<select id="multipleBeanNameParam" resultType="com.hua.vo.CityVo">
+		SELECT a.* FROM city a
+		<where>
+			(
+			<if test="null != vo1.id and '' != vo1.id">a.id = #{vo1.id}</if>
+			<if test="null != vo1.name and '' != vo1.name"> AND a.name LIKE #{vo1.name} ESCAPE '/' </if>
+			<if test="null != vo1.shortName and '' != vo1.shortName"> AND a.shortName LIKE #{vo1.shortName} ESCAPE '/' </if>
+			<if test="null != vo1.fullName and '' != vo1.fullName"> AND a.fullName LIKE #{vo1.fullName} ESCAPE '/' </if>
+			)
+			OR
+			(
+			<if test="null != vo2.id and '' != vo2.id">a.id = #{vo2.id}</if>
+			<if test="null != vo2.name and '' != vo2.name"> AND a.name LIKE #{vo2.name} ESCAPE '/' </if>
+			<if test="null != vo2.shortName and '' != vo2.shortName"> AND a.shortName LIKE #{vo2.shortName} ESCAPE '/' </if>
+			<if test="null != vo2.fullName and '' != vo2.fullName"> AND a.fullName LIKE #{vo2.fullName} ESCAPE '/' </if>
+			)
+		</where>
+	</select>
+
+	<!-- -->
+	<select id="singleListNoNameParam" resultType="com.hua.vo.CityVo">
+		SELECT a.* FROM city a
+		<!-- List参数，默认命名为 list，通过下标来获取，不能越界，否则抛数组下标越界异常 -->
+		<where>
+			<if test="null != list[0] and '' != list[0]">a.id = #{list[0]}</if>
+			<if test="null != list[1] and '' != list[1]"> AND a.name LIKE #{list[1]} ESCAPE '/' </if>
+			<if test="null != list[2] and '' != list[2]"> AND a.shortName LIKE #{list[2]} ESCAPE '/' </if>
+			<if test="null != list[3] and '' != list[3]"> AND a.fullName LIKE #{list[3]} ESCAPE '/' </if>
+		</where>
+	</select>
+
+	<!-- -->
+	<select id="singleListNameParam" resultType="com.hua.vo.CityVo">
+		SELECT a.* FROM city a
+		<!-- List参数，默认命名为 list，通过下标来获取，不能越界，否则抛数组下标越界异常 -->
+		<where>
+			<if test="null != myList[0] and '' != myList[0]">a.id = #{myList[0]}</if>
+			<if test="null != myList[1] and '' != myList[1]"> AND a.name LIKE #{myList[1]} ESCAPE '/' </if>
+			<if test="null != myList[2] and '' != myList[2]"> AND a.shortName LIKE #{myList[2]} ESCAPE '/' </if>
+			<if test="null != myList[3] and '' != myList[3]"> AND a.fullName LIKE #{myList[3]} ESCAPE '/' </if>
+		</where>
+	</select>
+
+	<!-- -->
+	<select id="multipleListNoNameParam" resultType="com.hua.vo.CityVo">
+		SELECT a.* FROM city a
+		<!-- 多个list参数，通过paramx的方式找到list，然后直接通过下标来访问 List参数，默认命名为 list，通过下标来获取，不能越界，否则抛数组下标越界异常 -->
+		<where>
+			(
+			<if test="null != param1[0] and '' != param1[0]">a.id = #{param1[0]}</if>
+			<if test="null != param1[1] and '' != param1[1]"> AND a.name LIKE #{param1[1]} ESCAPE '/' </if>
+			<if test="null != param1[2] and '' != param1[2]"> AND a.shortName LIKE #{param1[2]} ESCAPE '/' </if>
+			<if test="null != param1[3] and '' != param1[3]"> AND a.fullName LIKE #{param1[3]} ESCAPE '/' </if>
+			)
+			OR
+			(
+			<if test="null != param2[0] and '' != param2[0]">a.id = #{param2[0]}</if>
+			<if test="null != param2[1] and '' != param2[1]"> AND a.name LIKE #{param2[1]} ESCAPE '/' </if>
+			<if test="null != param2[2] and '' != param2[2]"> AND a.shortName LIKE #{param2[2]} ESCAPE '/' </if>
+			<if test="null != param2[3] and '' != param2[3]"> AND a.fullName LIKE #{param2[3]} ESCAPE '/' </if>
+			)
+		</where>
+	</select>
+
+	<!-- -->
+	<select id="multipleListNameParam" resultType="com.hua.vo.CityVo">
+		SELECT a.* FROM city a
+		<where>
+			(
+			<if test="null != list1[0] and '' != list1[0]">a.id = #{list1[0]}</if>
+			<if test="null != list1[1] and '' != list1[1]"> AND a.name LIKE #{list1[1]} ESCAPE '/' </if>
+			<if test="null != list1[2] and '' != list1[2]"> AND a.shortName LIKE #{list1[2]} ESCAPE '/' </if>
+			<if test="null != list1[3] and '' != list1[3]"> AND a.fullName LIKE #{list1[3]} ESCAPE '/' </if>
+			)
+			OR
+			(
+			<if test="null != list2[0] and '' != list2[0]">a.id = #{list2[0]}</if>
+			<if test="null != list2[1] and '' != list2[1]"> AND a.name LIKE #{list2[1]} ESCAPE '/' </if>
+			<if test="null != list2[2] and '' != list2[2]"> AND a.shortName LIKE #{list2[2]} ESCAPE '/' </if>
+			<if test="null != list2[3] and '' != list2[3]"> AND a.fullName LIKE #{list2[3]} ESCAPE '/' </if>
+			)
+		</where>
+	</select>
+
+	<!-- set 方式可行? -->
+	<select id="singleSetNoNameParam" resultType="com.hua.vo.CityVo">
+		SELECT a.* FROM city a
+		<where>
+			<if test="null != set[0] and '' != set[0]">a.id = #{set[0]}</if>
+			<if test="null != set[1] and '' != set[1]"> AND a.name LIKE #{set[1]} ESCAPE '/' </if>
+			<if test="null != set[2] and '' != set[2]"> AND a.shortName LIKE #{set[2]} ESCAPE '/' </if>
+			<if test="null != set[3] and '' != set[3]"> AND a.fullName LIKE #{set[3]} ESCAPE '/' </if>
+		</where>
+	</select>
+
+	<!-- -->
+	<select id="singleSetNameParam" resultType="com.hua.vo.CityVo">
+		SELECT a.* FROM city a
+		<where>
+			<if test="null != mySet[0] and '' != mySet[0]">a.id = #{mySet[0]}</if>
+			<if test="null != mySet[1] and '' != mySet[1]"> AND a.name LIKE #{mySet[1]} ESCAPE '/' </if>
+			<if test="null != mySet[2] and '' != mySet[2]"> AND a.shortName LIKE #{mySet[2]} ESCAPE '/' </if>
+			<if test="null != mySet[3] and '' != mySet[3]"> AND a.fullName LIKE #{mySet[3]} ESCAPE '/' </if>
+		</where>
+	</select>
+
+	<!-- -->
+	<select id="multipleSetNoNameParam" resultType="com.hua.vo.CityVo">
+		SELECT a.* FROM city a
+		<where>
+			(
+			<if test="null != param1[0] and '' != param1[0]">a.id = #{param1[0]}</if>
+			<if test="null != param1[1] and '' != param1[1]"> AND a.name LIKE #{param1[1]} ESCAPE '/' </if>
+			<if test="null != param1[2] and '' != param1[2]"> AND a.shortName LIKE #{param1[2]} ESCAPE '/' </if>
+			<if test="null != param1[3] and '' != param1[3]"> AND a.fullName LIKE #{param1[3]} ESCAPE '/' </if>
+			)
+			OR
+			(
+			<if test="null != param2[0] and '' != param2[0]">a.id = #{param2[0]}</if>
+			<if test="null != param2[1] and '' != param2[1]"> AND a.name LIKE #{param2[1]} ESCAPE '/' </if>
+			<if test="null != param2[2] and '' != param2[2]"> AND a.shortName LIKE #{param2[2]} ESCAPE '/' </if>
+			<if test="null != param2[3] and '' != param2[3]"> AND a.fullName LIKE #{param2[3]} ESCAPE '/' </if>
+			)
+		</where>
+	</select>
+
+	<!-- -->
+	<select id="multipleSetNameParam" resultType="com.hua.vo.CityVo">
+		SELECT a.* FROM city a
+		<where>
+			(
+			<if test="null != set1[0] and '' != set1[0]">a.id = #{set1[0]}</if>
+			<if test="null != set1[1] and '' != set1[1]"> AND a.name LIKE #{set1[1]} ESCAPE '/' </if>
+			<if test="null != set1[2] and '' != set1[2]"> AND a.shortName LIKE #{set1[2]} ESCAPE '/' </if>
+			<if test="null != set1[3] and '' != set1[3]"> AND a.fullName LIKE #{set1[3]} ESCAPE '/' </if>
+			)
+			OR
+			(
+			<if test="null != set2[0] and '' != set2[0]">a.id = #{set2[0]}</if>
+			<if test="null != set2[1] and '' != set2[1]"> AND a.name LIKE #{set2[1]} ESCAPE '/' </if>
+			<if test="null != set2[2] and '' != set2[2]"> AND a.shortName LIKE #{set2[2]} ESCAPE '/' </if>
+			<if test="null != set2[3] and '' != set2[3]"> AND a.fullName LIKE #{set2[3]} ESCAPE '/' </if>
+			)
+		</where>
+	</select>
+	
+	<delete id="feignUpdate">
+		<!-- UPDATE city SET name = 'feign' WHERE 0 = 1; -->
+		SELECT 1
+	</delete>
+
+</mapper>

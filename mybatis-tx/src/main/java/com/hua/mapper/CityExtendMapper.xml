@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.3//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hua.mapper.CityExtendMapper">
+
+	<!-- main table -->
+	<sql id="mainTable">city_extend</sql>
+	
+	<sql id="extendTable">city_extend_ext</sql>
+	
+	<!-- ddl 新增字段 ALTER TABLE tb_name ADD column_name dataType constraint_def AFTER add_place; -->
+	<update id="addColumn" parameterType="map">
+		ALTER TABLE ${tableName} ADD ${columName} ${dataType};
+	</update>
+
+	<!-- insert column -->
+	<sql id="insertColumn">
+		<trim suffixOverrides="," suffix="">
+			<if test="null != id and '' != id"> id, </if>
+			<if test="null != name and '' != name"> name, </if>
+			<if test="null != shortName and '' != shortName"> shortName, </if>
+			<if test="null != fullName and '' != fullName"> fullName, </if>
+			<if test="null != province and '' != province"> province, </if>
+			<if test="null != postalCode and '' != postalCode"> postalCode </if>
+		</trim>
+	</sql>
+	
+	<!-- insert value -->
+	<sql id="insertValue">
+		<trim suffixOverrides="," suffix="">
+			<if test="null != id and '' != id"> #{id}, </if>
+			<if test="null != name and '' != name"> #{name}, </if>
+			<if test="null != shortName and '' != shortName"> #{shortName}, </if>
+			<if test="null != fullName and '' != fullName"> #{fullName}, </if>
+			<if test="null != province and '' != province"> #{province}, </if>
+			<if test="null != postalCode and '' != postalCode"> #{postalCode} </if>		
+		</trim>
+	</sql>
+
+	<!-- insert column -->
+	<sql id="insertExtColumn">
+		<trim suffixOverrides="," suffix="">
+			<if test="null != ext and ext.size() > 0">
+				<foreach collection="ext" separator="," index="key" item="value">
+					${key}
+				</foreach>
+			</if>
+		</trim>
+	</sql>
+	
+	<!-- insert value -->
+	<sql id="insertExtValue">
+		<trim suffixOverrides="," suffix="">
+			<if test="null != ext and ext.size() > 0">
+				<foreach collection="ext" separator="," index="key" item="value">
+					#{value}
+				</foreach>
+			</if>		
+		</trim>
+	</sql>
+
+	<!-- insert -->
+	<insert id="insert" parameterType="cityExtend">
+		<!-- 主表 -->
+		INSERT INTO <include refid="mainTable" /> (<include refid="insertColumn" />) VALUES (<include refid="insertValue" />);	
+		<!-- 扩展表 -->
+		INSERT INTO <include refid="extendTable" /> (<include refid="insertExtColumn" />) VALUES (<include refid="insertExtValue" />);			
+	</insert>
+
+	<!-- 删除: 删除主表的记录，连同扩展表记录也删除 -->
+	<delete id="delete" parameterType="string">
+		<!-- 先删除从表，再删除主表 -->
+		DELETE FROM <include refid="extendTable" />
+		WHERE cityId = #{id};		
+		
+		DELETE FROM <include refid="mainTable" />
+		WHERE id = #{id};
+	</delete>
+
+	<!-- update: 更新主/从表 -->
+	<update id="update" parameterType="cityExtend">
+		UPDATE <include refid="mainTable" />
+		<set>
+			<if test="null != name and '' != name"> name = #{name}, </if>
+			<if test="null != shortName and '' != shortName"> shortName = #{shortName}, </if>
+			<if test="null != fullName and '' != fullName"> fullName = #{fullName}, </if>
+			<if test="null != province and '' != province"> province = #{province}, </if>
+			<if test="null != postalCode and '' != postalCode"> postalCode = #{postalCode} </if>		
+		</set>
+		WHERE id = #{id};
+		
+		<!-- 更新从表 -->
+		<if test="null != ext and ext.size() > 0">
+			UPDATE <include refid="extendTable" />
+			<set>
+				<foreach collection="ext" separator="," index="key" item="value">
+					${key} = #{value}
+				</foreach>			
+			</set>
+			WHERE cityId = #{id}			
+		</if>		
+	</update>
+
+	<!-- insert -->
+	<insert id="insertOfIdentity" parameterType="cityExtend">
+		<selectKey keyProperty="id" keyColumn="id">
+			 SELECT @@IDENTITY FROM <include refid="mainTable" />
+		</selectKey>
+		<!-- 主表 -->
+		INSERT INTO <include refid="mainTable" /> (<include refid="insertColumn" />) VALUES (<include refid="insertValue" />);	
+		<!-- 扩展表 -->
+		INSERT INTO <include refid="extendTable" /> (<include refid="insertExtColumn" />) VALUES (<include refid="insertExtValue" />);			
+	</insert>
+
+
+	<resultMap type="com.hua.entity.CityExtend" id="cityExtendResultMap">
+		<!-- 主键映射 -->
+		<id property="id" javaType="string" column="id" jdbcType="VARCHAR" />
+		<result property="name" javaType="string" column="name" jdbcType="VARCHAR" />
+		<result property="shortName" javaType="string" column="shortName" jdbcType="VARCHAR" />
+		<result property="province" javaType="string" column="province" jdbcType="VARCHAR" />
+		<association property="ext" autoMapping="true" javaType="map"
+			column="id" fetchType="eager" select="getAsso"></association>	
+	</resultMap>
+	
+	<!--  -->
+	<select id="getFullObject" resultMap="cityExtendResultMap">
+		SELECT a.* FROM <include refid="mainTable" /> a
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="getAsso" resultType="map">
+		SELECT a.* FROM <include refid="extendTable" /> a
+		WHERE a.cityId = #{id}
+	</select>	
+	
+	<select id="getByte" resultType="java.sql.Clob">
+			SELECT AES_ENCRYPT(#{value},#{key})
+	</select>
+
+	<select id="getHex" resultType="java.lang.String">
+			SELECT HEX(AES_ENCRYPT(#{value},#{key}))
+	</select>
+
+</mapper>

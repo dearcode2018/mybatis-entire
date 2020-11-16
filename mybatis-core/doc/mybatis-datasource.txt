@@ -1,0 +1,23 @@
+
+
+SqlSessionFactory.build(Configuration)
+
+new Configuration(Environment)
+new Environment(String id, TransactionFactory transactionFactory, DataSource dataSource)
+TransactionFactory transactionFactory = new JdbcTransactionFactory();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

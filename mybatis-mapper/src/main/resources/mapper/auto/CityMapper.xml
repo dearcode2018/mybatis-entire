@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hua.mapper.auto.CityMapper">
+	
+	<!-- 二级缓存配置 WARNINGS: 在tk-mapper框架下使用二级缓存 不能在xml文件中声明cache，要用@CacheNamespace
+	声明二级缓存才起作用
+	 -->
+	<!-- <cache eviction="LRU" flushInterval="300000" readOnly="false" size="500" /> -->
+
+  <resultMap id="BaseResultMap" type="com.hua.entity.auto.City">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="shortName" jdbcType="VARCHAR" property="shortname" />
+    <result column="fullName" jdbcType="VARCHAR" property="fullname" />
+    <result column="province" jdbcType="VARCHAR" property="province" />
+    <result column="postalCode" jdbcType="VARCHAR" property="postalcode" />
+  </resultMap>
+</mapper>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hua.mapper.auto.CityMapper">
+  <resultMap id="BaseResultMap" type="com.hua.entity.City">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="ID" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="shortName" jdbcType="VARCHAR" property="shortname" />
+    <result column="fullName" jdbcType="VARCHAR" property="fullname" />
+    <result column="province" jdbcType="VARCHAR" property="province" />
+    <result column="postalCode" jdbcType="VARCHAR" property="postalcode" />
+  </resultMap>
+</mapper>

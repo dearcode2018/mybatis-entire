@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.3//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hua.mapper.result.CustomResultMapper">
+
+	<!-- association -->
+	<resultMap id="customResultMapAssociation" type="com.hua.vo.result.CustomResultVo">
+		<!-- 主键映射 -->
+		<id property="id" javaType="string" column="id" jdbcType="VARCHAR" />
+		<result property="name" javaType="string" column="name" jdbcType="VARCHAR" />
+		<result property="balance" javaType="double" column="balance" jdbcType="NUMERIC" />
+		<result property="address" javaType="string" column="address" jdbcType="VARCHAR" />
+		<!-- 
+		枚举: 
+		默认: org.apache.ibatis.type.EnumTypeHandler (使用 枚举中字段的名称)
+		使用的下标: org.apache.ibatis.type.EnumOrdinalTypeHandler (下标从0开始)
+		自定义: 继承BaseTypeHandler
+		 -->
+		<!-- <result property="status" column="status" jdbcType="VARCHAR" typeHandler="org.apache.ibatis.type.EnumOrdinalTypeHandler" /> -->
+		<!-- 自定义 -->
+		<result property="status" column="status" jdbcType="VARCHAR" typeHandler="com.hua.handler.CustomStatusHandler" />
+		<!-- 一对一关联，fetchType="eager" 延迟加载需要另外设置 -->
+		<association property="asso" autoMapping="true" javaType="com.hua.vo.result.AssociationVo"
+			column="asso_id" fetchType="eager" select="getAsso"></association>
+	</resultMap>
+
+	<select id="getVo" resultMap="customResultMapAssociation">
+		SELECT a.* FROM custom_result a
+		<where>
+			a.id = #{id}
+		</where>
+	</select>
+	
+	<select id="getBitVo" resultType="com.hua.vo.result.CustomResultBitVo">
+		SELECT a.* FROM custom_result a
+		<where>
+			a.id = #{id}
+		</where>
+	</select>	
+
+	<select id="getAsso" resultType="com.hua.vo.result.AssociationVo">
+		SELECT a.* FROM association_result a
+		WHERE a.id = #{id}
+	</select>	
+
+	<!-- ========================================================= -->	
+	
+	<!-- CollectionSelect -->
+	<resultMap id="customResultMapCollectionSelect" type="com.hua.vo.result.CustomResultVo">
+		<!-- 主键映射 -->
+		<id property="id" javaType="string" column="id" jdbcType="VARCHAR" />
+		<result property="name" javaType="string" column="name" jdbcType="VARCHAR" />
+		<result property="balance" javaType="double" column="balance" jdbcType="NUMERIC" />
+		<result property="address" javaType="string" column="address" jdbcType="VARCHAR" />
+		<!-- 自定义 -->
+		<result property="status" column="status" jdbcType="VARCHAR" typeHandler="com.hua.handler.CustomStatusHandler" />		
+		<!-- 集合嵌套查询select的方式 注意，这里的column应该是填写本对象的主键（oid），另外一张表表通过外键与该值进行匹配  -->
+		<collection property="itemResultVos" ofType="com.hua.vo.result.ItemResultVo" 
+			javaType="arrayList" column="id" select="fetchItem"></collection>
+	</resultMap>
+	
+	<select id="getCollectionSelect" resultMap="customResultMapCollectionSelect">
+		SELECT a.* FROM custom_result a
+		WHERE a.id = #{id}		
+	</select>
+	
+	<select id="fetchItem" resultType="com.hua.vo.result.ItemResultVo">
+		SELECT a.* FROM item_result a
+		<!-- 外键等于主表的主键 -->
+		WHERE a.customId = #{id}
+	</select>
+	
+	
+	<!-- ==================== -->
+	
+	<!-- 通过result的方式，在sql中left join之后，mybatis自动映射到List中 -->
+	<!-- CollectionResult -->
+	<resultMap id="customResultMapCollectionResult" type="com.hua.vo.result.CustomResultVo">
+		<!-- 主键映射 -->
+		<id property="id" javaType="string" column="id" jdbcType="VARCHAR" />
+		<result property="name" javaType="string" column="name" jdbcType="VARCHAR" />
+		<result property="balance" javaType="double" column="balance" jdbcType="NUMERIC" />
+		<result property="address" javaType="string" column="address" jdbcType="VARCHAR" />
+		<!-- 自定义 -->
+		<result property="status" column="status" jdbcType="VARCHAR" typeHandler="com.hua.handler.CustomStatusHandler" />		
+		<!-- 集合嵌套结果result方式 -->
+		<!-- 可以指定  resultMap 或在 标签内部指定  result -->
+		<collection property="itemResultVos" ofType="com.hua.vo.result.ItemResultVo" javaType="arrayList">
+			<!-- 注意列名称 要避免和主表重名 -->
+			<result property="name" javaType="string" column="b_name" jdbcType="VARCHAR" />
+			<result property="orderTs" javaType="date" column="b_orderTs" jdbcType="TIMESTAMP" />
+			<result property="monetary" javaType="double" column="b_monetary" jdbcType="NUMERIC" />
+			<result property="remark" javaType="string" column="b_remark" jdbcType="VARCHAR" />
+		</collection>
+	</resultMap>	
+	
+	<select id="getCollectionResult" resultMap="customResultMapCollectionResult">
+		SELECT a.*, 
+		b.name AS b_name, b.orderTs AS b_orderTs, b.monetary AS b_monetary, b.remark AS remark
+		FROM custom_result a
+		LEFT JOIN item_result b ON (a.id = b.customId)
+		WHERE a.id = #{id}		
+	</select>	
+	
+</mapper>

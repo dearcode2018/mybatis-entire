@@ -1,0 +1,49 @@
+
+spring:
+  application:
+    name: 
+  profiles:
+    active:
+    - dev
+
+  autoconfigure:
+    exclude:
+    - 
+
+# spring.devtools.restart.enabled 禁用devtools自动重启功能，直接用IDE的热部署
+  devtools:
+    restart:
+    # dev模式下，修改配置，需要打开该功能配置-重启，配置才能生效
+    # 不过在云配置体系下，该功能用不上，只是在小型研究项目中使用到
+    # 频繁重启，对大型工程来说效率较低，因此会采用云配置实时生效的方式    
+      enabled: true
+      additional-paths:
+      - src/main/java
+
+
+#mybatis
+mybatis-plus:
+  #mapper-locations: classpath*:/mapper/**/*.xml
+  global-config:
+    #数据库相关配置
+    db-config:
+      #主键类型  AUTO:"数据库ID自增", INPUT:"用户输入ID", ID_WORKER:"全局唯一ID (数字类型唯一ID)", UUID:"全局唯一ID UUID";
+      id-type: AUTO
+      #字段策略 IGNORED:"忽略判断",NOT_NULL:"非 NULL 判断"),NOT_EMPTY:"非空判断"
+      field-strategy: NOT_NULL
+      logic-delete-value: -1
+      logic-not-delete-value: 0
+    banner: false
+  #原生配置
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    call-setters-on-nulls: true
+    jdbc-type-for-null: 'null'
+
+
+
+
+
+
+

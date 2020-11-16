@@ -1,0 +1,69 @@
+【项目信息】
+项目名称 : spring
+中文名称 : Spring
+项目版本 : version 1.0
+
+主要技术 : 
+
+项目描述 : 
+
+项目备注 : 
+
+【项目规划】
+
+1) 事务超时时间设置
+ org.apache.ibatis.executor.statement.StatementUtil.applyTransactionTimeout
+ queryTimeout和transactionTimeout取较小值 设置到  statement.setQueryTimeout(transactionTimeout);
+ queryTimeout 取的是org.apache.ibatis.session.Configuration.setDefaultStatementTimeout();
+ transactionTimeout取的是DataSourceTransactionManager.setDefaultTimeout()或者@Transaction.timeout
+ transactionTimeout意义在于执行update statement之前的最大空闲时间，而StatementUtil.applyTransactionTimeout
+ 设置的值到了Statement的执行时间，对于有等待或执行超时的，事务会超时.
+
+Spring托管事务-检查事务是否超时
+org.apache.ibatis.executor.SimpleExecutor.prepareStatement()
+org.mybatis.spring.transaction.SpringManagedTransaction.getTimeout()
+org.springframework.transaction.support.ResourceHolderSupport.getTimeToLiveInSeconds -> checkTransactionTimeout 抛出TransactionTimedOutException
+ 
+2)
+/**
+ * 
+ * 描述: 验证事务超时的场景
+ * 结论
+ * 1) 开始事务: 从数据源获取连接对象，然后创建事务对象，开始生命周期
+ * 2) 事务超时定义: 从开启事务开始计时，执行每个 update statement就检查一次当前事务是否超时，超过则抛事务超时异常
+ * 3) 查询方法中，开启事务，执行select statement也会检查超时时间，因此如果是查询，就不要开启事务
+ * 4) 没有事务或者事务的超时时间为无限，才不会出现事务超时的情况
+ * 
+ */
+3)
+
+4)
+
+5)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

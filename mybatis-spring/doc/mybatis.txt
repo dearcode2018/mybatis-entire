@@ -1,0 +1,197 @@
+
+通用部分
+1）
+java.io.Reader
+org.apache.ibatis.io.Resources
+org.apache.ibatis.session.SqlSession
+org.apache.ibatis.session.SqlSessionFactory
+org.apache.ibatis.session.SqlSessionFactoryBuilder
+2）构建过程
+String path = "mybatis-config.xml";
+Reader reader = Resources.getResourceAsReader(path);
+SqlSessionFactoryBuilder builder = new SqlSessionFactoryBuilder();
+SqlSessionFactory factory = builder.build(reader);
+SqlSession session = factory.openSession();
+3）org.apache.ibatis.session.SqlSession
+void commit() 除了查询操作(SELECT)无需提交，其他都要手动提交，
+因为默认是不自动提交。
+T getMapper(Class<T>);
+4）
+///
+org.apache.ibatis.session.SqlSession
+1）获取方式
+SqlSessionFactory openSession()
+2）insert
+int insert(String method)
+int insert(String, Object)
+3）delete
+int delete(String method)
+int delete(String, Object param)
+4）update
+int update(String method)
+int update(String, Object param)
+5）select
+查询条件: 多个条件可以统一封装在一个对象中。
+① 通用
+select(String, ResultHandler)
+select(String, Object, ResultHandler)
+select(String, Object, RowBounds, ResultHandler)
+② 单个值/对象
+/* mapper接口名.方法名 */
+T selectOne(String method)
+/* mapper接口名.方法名,查询参数 */
+T selectOne(String, Object param)
+③ 多个对象
+selectList(String method)
+selectList(String, Object param)
+selectList(String, Object, RowBounds)
+④ 映射
+selectMap(String, String)
+selectMap(String, Object, String)
+selectMap(String, Object, String, RowBounds)
+6）getMapper
+/* 获取Mapper接口（对象） */
+T getMapper(Class<T>)
+7）
+///
+内置类型
+/* begin javaType */
+javaType
+有内置类型，但是可以直接写java类全名，例如: java.lang.String
+(下划线开头的为 [基本类型])
+_byte --> byte
+_long --> long
+_short --> short
+_int --> int
+_integer --> int
+_double --> double
+_float --> float
+_boolean --> boolean
+string --> String
+byte --> Byte
+long --> Long
+short --> Short
+int Integer
+integer --> Integer
+double --> Double
+float --> Float
+boolean --> Boolean
+date --> Date
+decimal BigDecimal
+bigdecimal --> BigDecimal
+object --> Object
+collection --> Collection
+list --> List
+arraylist --> ArrayList
+iterator --> Iterator
+map --> Map
+hashmap --> HashMap
+/* end of javaTyp */
+
+/* begin jdbcType  */
+jdbcType (常用: VARCHAR CHAR DATE NUMERIC INTEGER FLOAT DOUBLE SMALLINT)
+ARRAY, BIGINT, BINARY, BIT, BLOB, BOOLEAN, CHAR, CLOB, DATALINK, DATE, 
+DECIMAL, DOUBLE, FLOAT, INTEGER, LONGVARBINARY, LONGVARCHAR, 
+REAL, REF, SMALLINT, STRUCT, TIME, TIMESTAMP, TINYINT, VARBINARY, VARCHAR
+/* end of jdbcType  */
+///
+mybatis-config.xml （mybatis 3.x）
+Header:
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC 
+"-//mybatis.org//DTD Config 3.x//EN"
+"http://www.mybatis.org/dtd/mybatis-3-config.dtd">
+-----
+XxDaoMapper.xml （mybatis 3.x）
+Header:
+<?xml version="1.0" encoding="UTF-8" ?>
+ <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.x//EN" 
+"http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+/* 3.x, x是具体值 */
+///
+配置说明
+1）mybatis-config.xml是mybatis的总配置文件，集成了mybatis自身所有的配置。
+配置项有一定的顺序，分别是: 
+properties, settings, typeAliases, typeHandlers, objectFactory, objectWrapperFactory, plugins, environments, databaseIdProvider, mappers
+（配置项不一定必有，但是前后顺序一定要正确）
+2）properties
+///
+通用配置
+1）myBatis配置文件
+mybatis-config.xml
+<configuration>
+	<environments>
+	</environments>
+	<settings>
+	</settings>	
+	<typeAliases>
+		<typeAlias alias="" type="" />
+		<typeAlias alias="" type="" />
+	</typeAliases>
+	<mappers>
+	</mappers>
+</configuration>
+///
+相对路径: 
+<mapper resource="" />
+绝对路径: 
+<mapper url="" />
+2）mybatis映射文件
+XxMapper.xml
+3）
+///
+<environments default="development">
+<environment id="development">
+<transactionManager type="JDBC" />
+<dataSource type="POOLED">
+<property name="driver" value="com.mysql.jdbc.Driver" />
+<property name="url"         value="jdbc:mysql://127.0.0.1:3306/good?useUnicode=true&amp;characterEncoding=UTF-8" />
+<property name="username" value="root" />
+<property name="password" value="root" />
+</dataSource>
+</environment>
+</environments>
+///
+<configuration>
+<properties resource="jdbc.properties" />
+<environments default="development">
+<environment id="development">
+<transactionManager type="JDBC" />
+<dataSource type="POOLED">
+<property name="driver" value="${driverClassName}" />
+<property name="url" value="${url}" />
+<property name="username" value="${username}" />
+<property name="password" value="${password}" />
+</dataSource>
+</environment>
+</environments>
+<mappers>
+<mapper resource="com/spr/service/PersonDaoMapper.xml" />
+<mapper resource="com/spr/service/UserDaoMapper.xml" /></mappers>
+</configuration>
+///
+<settings>
+<setting name="cacheEnabled" value="true"/>
+<setting name="lazyLoadingEnabled" value="true"/>
+<setting name="multipleResultSetsEnabled" value="true"/>
+<setting name="defaultStatementTimeout" value="25000"/></settings>
+///
+mybatis_sql
+1）只能传入一个参数
+基本类型/自定义类型/Map/Collection(Array/List)
+基本类型 #{参数名}
+自定义类型 #{属性名}
+Map #{key_name}
+Collection: (数组/List)
+	<foreach collection="list / array" item="item_name" open="" separator="" close="">
+		#{item_name}
+	</foreach>
+2）mybatis select返回结果集ResultMap对象，key-value, 根据resultType / resutlMap
+指定的JavaBean对象,key-> JavaBean对象的属性, value赋值。因此，无论返回的
+是一个对象，还是该对象的集合，都必须指定JavaBean实体对象。
+3）
+///
+动态Sql
+1）
+2）
+7）

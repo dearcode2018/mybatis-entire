@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.3//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!-- jdbc 参数配置 -->
+	<properties resource="jdbc.properties" />
+	<settings>
+		<!-- 全局Mapper二级缓存开关，全局开关要打开，具体Mapper的缓存配置才能生效 -->
+		<setting name="cacheEnabled" value="true"/>
+		<!-- 缓存范围，默认SESSION (SESSION | STATEMENT) -->
+		<setting name="localCacheScope" value="SESSION"/>
+		<!-- <setting name="lazyLoadingEnabled" value="true"/> -->
+		<setting name="multipleResultSetsEnabled" value="true"/>
+		<setting name="defaultStatementTimeout" value="25000"/>
+		<!-- 控制台输出SQL -->
+		<setting name="logImpl" value="STDOUT_LOGGING"/>
+	</settings>
+	
+	<!-- 实体类的别名 -->
+	<typeAliases>
+		<!-- <typeAlias type="" alias=""/> -->
+		<!-- 分页实体 -->
+		<typeAlias type="com.hua.entity.PagerEntity" alias="pagerEntity"/>
+		<typeAlias type="com.hua.cache.MapperCache" alias="MapperCache" />
+	</typeAliases>
+	
+	<!-- jdbc环境 -->
+	<environments default="development">
+		<environment id="development">
+			<transactionManager type="JDBC" />
+			<dataSource type="POOLED">
+				<property name="driver" value="${db.jdbc.c3p0.driverClass}"/>
+				<property name="url" value="${db.jdbc.c3p0.jdbcUrl}"/>
+				<property name="username" value="${db.jdbc.c3p0.user}"/>
+				<property name="password" value="${db.jdbc.c3p0.password}"/>
+				<!-- 设置事务隔离级别 4: Connection.TRANSACTION.REPEATABLE_READ -->
+				<property name="defaultTransactionIsolationLevel" value="4"/>
+			</dataSource>
+		</environment>
+	</environments>
+	
+	<!-- mapper映射 -->
+	<mappers>
+		<!-- 指定class -->
+		<!-- <mapper class="com.hua.mapper.o2o.PersonMapper" /> -->
+		<mapper resource="mapper/CityMapper.xml"/>
+		<!-- 指定class Invalid bound statement (not found): com.hua.mapper.param.CityMapper.get -->
+		<!-- <mapper class="com.hua.mapper.param.CityMapper" /> -->
+	</mappers>
+
+</configuration>

@@ -1,0 +1,321 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.hua</groupId>
+  <artifactId>mybatis-entire</artifactId>
+  <version>0.0.1</version>
+  <packaging>pom</packaging>
+  <name>mybatis-entire</name>
+  <description>mybatis Maven Entire Project</description>
+  
+  	<!-- 模块-子项目 -->
+	<modules>
+		<!-- 模板 -->
+		<module>mybatis-template</module>				
+		<module>mybatis-core</module>		
+		<module>mybatis-anno</module>		
+		<module>mybatis-config</module>
+		<module>mybatis-cache</module>		
+		<module>mybatis-generator</module>			
+		<module>mybatis-mapping</module>	
+		<module>mybatis-mapper</module>
+		<module>mybatis-multi</module>	
+		<module>mybatis-param</module>	
+		<module>mybatis-plugin</module>
+		<module>mybatis-plus</module>
+		<module>mybatis-spring</module>		
+		<module>mybatis-spring-boot</module>
+		<module>mybatis-test</module>		
+		<module>mybatis-tx</module>		
+		<module>mybatis3</module>
+	</modules>
+ 
+	<!-- 公共属性 -->
+	<properties>
+		<jdk.version>1.8</jdk.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.version>0.0.1</maven.version>
+		<maven.plugin.compiler.version>3.3</maven.plugin.compiler.version>
+		<maven.plugin.source.version>2.4</maven.plugin.source.version>
+		<maven.plugin.surefire.version>2.18.1</maven.plugin.surefire.version>
+		<maven.plugin.assembly.version>2.5.5</maven.plugin.assembly.version>
+		<maven.plugin.resources.version>2.7</maven.plugin.resources.version>
+		<maven.plugin.dependency.version>2.10</maven.plugin.dependency.version>
+		<maven.plugin.war.version>3.0</maven.plugin.war.version>
+		<mybatis.core.version>0.0.1</mybatis.core.version>
+		<orm.version>0.0.1</orm.version>
+		<mybatis.guice.version>3.6</mybatis.guice.version>
+		<mybatis.cache.version>1.0.0</mybatis.cache.version>
+		<mybatis.migrations.version>3.2.0</mybatis.migrations.version>		
+     	<mybatis-generator.version>1.4.0</mybatis-generator.version>
+        <tk.mapper.version>4.1.5</tk.mapper.version>
+        <guava.version>27.0.1-jre</guava.version>    
+		<mysql.version>8.0.21</mysql.version>
+		<mybatis.version>3.5.5</mybatis.version>
+		<!-- spring -->
+		<spring.version>5.1.5.RELEASE</spring.version>
+		<mybatis.spring.version>2.0.5</mybatis.spring.version>	
+		<hikaricp.version>3.1.0</hikaricp.version>
+       <pagehelper.version>5.1.8</pagehelper.version>		
+		<mybatis.core.version>0.0.1</mybatis.core.version>       				                 		
+	</properties>  
+  
+	<!-- 依赖管理 -->
+	<dependencyManagement>
+		<dependencies>
+        <dependency>
+            <groupId>tk.mybatis</groupId>
+            <artifactId>mapper</artifactId>
+            <version>${tk.mapper.version}</version>
+        </dependency>	
+        	
+        <dependency>
+            <groupId>org.mybatis.generator</groupId>
+            <artifactId>mybatis-generator-core</artifactId>
+            <version>${mybatis-generator.version}</version>
+        </dependency>        
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
+        </dependency>
+
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis</artifactId>
+			<version>${mybatis.version}</version>
+		</dependency>
+
+			<dependency>
+			    <groupId>com.zaxxer</groupId>
+			    <artifactId>HikariCP</artifactId>
+			    <version>${hikaricp.version}</version>
+			    <exclusions>
+<!-- 			    	<exclusion>
+ 					   <groupId>org.slf4j</groupId>		
+ 					    <artifactId>slf4j-api</artifactId>	    	
+			    	</exclusion> -->
+			    </exclusions>
+			</dependency>
+			
+			<!-- 分页插件 -->
+            <dependency>
+                <groupId>com.github.pagehelper</groupId>
+                <artifactId>pagehelper</artifactId>
+                <version>${pagehelper.version}</version>
+            </dependency>
+
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis-spring</artifactId>
+			<version>${mybatis.spring.version}</version>
+		</dependency>
+
+		<!-- spring -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-beans</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+			<version>${spring.version}</version>
+		</dependency>		
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-websocket</artifactId>
+			<version>${spring.version}</version>
+		</dependency>		
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aop</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aspects</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>${spring.version}</version>
+		</dependency>				
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-orm</artifactId>
+			<version>${spring.version}</version>
+		</dependency>		
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-oxm</artifactId>
+			<version>${spring.version}</version>
+		</dependency>			
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-tx</artifactId>
+			<version>${spring.version}</version>
+		</dependency>			
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+			<version>${spring.version}</version>
+		</dependency>		
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jms</artifactId>
+			<version>${spring.version}</version>
+		</dependency>		
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-expression</artifactId>
+			<version>${spring.version}</version>
+		</dependency>		
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-messaging</artifactId>
+			<version>${spring.version}</version>
+		</dependency>		
+
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-instrument</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		
+		</dependencies>
+        	
+	</dependencyManagement>  
+  
+ 	<!-- 公共构建 -->
+	<build>
+		<plugins>
+
+			<!-- 编译插件 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${maven.plugin.compiler.version}</version>
+				<configuration>
+					<compilerVersion>${jdk.version}</compilerVersion>
+					<!-- 编译的类文件是否包含调试信息 -->
+					<debug>true</debug>
+					<!-- 是否展示详细的设置信息 -->
+					<detail>true</detail>
+					<!-- 指定编译文件的编码 -->
+					<encoding>${project.build.sourceEncoding}</encoding>
+					<!-- 编译失败是否停止 -->
+					<failOnError>true</failOnError>
+					<!-- 是否强制jdk版本 -->
+					<forceJavacCompilerUse>true</forceJavacCompilerUse>
+					<!-- 是否分开执行编译，设置为true会导致部分输出中文乱码 -->
+					<fork>false</fork>
+					<!-- 输出源码文件名 -->
+					<outputFileName>a.jar</outputFileName>
+					<!-- 源码位置是否显示过期api被使用 -->
+					<showDeprecation>true</showDeprecation>
+					<!-- 是否输出编译警告 -->
+					<showWarnings>false</showWarnings>
+					<!-- 忽略测试 -->
+					<skip>true</skip>
+					<!-- 是否忽略main源码 -->
+					<skipMain>false</skipMain>
+					<!-- main编译器版本 source 和 target 要保持一致 -->
+					<source>${jdk.version}</source>
+					<!-- main编译器版本 source 和 target 要保持一致 -->
+					<target>${jdk.version}</target>
+					<!-- 测试编译器版本 source 和 target 要保持一致 -->
+					<testSource>${jdk.version}</testSource>
+					<!-- 测试编译器版本 source 和 target 要保持一致 -->
+					<testTarget>${jdk.version}</testTarget>
+					<!-- 输出编译器详细运行信息 -->
+					<verbose>false</verbose>
+
+				</configuration>
+			</plugin>
+
+			<!-- 资源插件 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>${maven.plugin.resources.version}</version>
+				<configuration>
+					<!-- 指定文件的编码 -->
+					<encoding>${project.build.sourceEncoding}</encoding>
+					<!-- 包含空目录 -->
+					<includeEmptyDirs>true</includeEmptyDirs>
+					<!-- 是否直接覆盖 -->
+					<overwrite>true</overwrite>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>compile</phase>
+						<goals>
+							<goal>resources</goal>
+						</goals>
+						<configuration>
+							<includeEmptyDirs>true</includeEmptyDirs>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- 打包插件，打包当前项目相关文件 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>${maven.plugin.surefire.version}</version>
+				<configuration>
+					<!-- 解决 控制台输出测试信息 - 乱码 -->
+					<argLine>-Dfile.encoding=${project.build.sourceEncoding}</argLine>
+					<reuseForks>true</reuseForks>
+					<!-- 打包时跳过单元测试 -->
+					<skip>true</skip>
+					<skipTests>true</skipTests>
+					<!-- 忽略测试失败 -->
+					<testFailureIgnore>true</testFailureIgnore>
+				</configuration>
+			</plugin>
+
+		</plugins>
+	</build>
+	
+</project>

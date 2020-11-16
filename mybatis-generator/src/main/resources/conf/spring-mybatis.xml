@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans	http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+	http://www.springframework.org/schema/context	http://www.springframework.org/schema/context/spring-context-4.0.xsd
+	"
+	default-lazy-init="true">
+
+
+
+	<!-- 启用注解 -->
+	<context:component-scan base-package="com.hua" />
+
+	<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="${db.jdbc.driverClass}" />
+		<property name="jdbcUrl" value="${db.jdbc.jdbcUrl}" />
+		<property name="username" value="${db.jdbc.user}" />
+		<property name="password" value="${db.jdbc.password}" />
+		<property name="maximumPoolSize" value="${db.jdbc.maxPoolSize}" />
+		<property name="minimumIdle" value="${db.jdbc.minPoolSize}" />
+	</bean>
+
+	<!--  -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="typeAliasesPackage" value="com.hua.entity" />
+ 		<property name="configuration" ref="tkMapperConfiguration"/>		
+		<!-- mapper和resultmap配置路径 -->
+		<property name="mapperLocations">
+			<list>
+				<value>classpath:mapper/**/*Mapper.xml</value>
+			</list>
+		</property>
+	<!-- 插件 -->
+	<property name="plugins">
+		<array>
+			<!-- 分页插件 https://gitee.com/free/Mybatis_PageHelper -->
+			<bean class="com.github.pagehelper.PageInterceptor">
+				<property name="properties">
+					<!--使用下面的方式配置参数，一行配置一个 -->
+					<value>
+                            helperDialect=mysql
+                            pageSizeZero=true
+                            reasonable=true
+                            supportMethodsArguments=true
+					</value>
+				</property>
+			</bean>
+		</array>
+	</property>		
+	</bean>
+
+	<!-- Mapper接口扫描 -->
+	<bean id="mapperScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.hua.mapper" />
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+	</bean>
+
+    <!-- 通用Mapper配置 -->
+    <bean id="tkMapperConfiguration" class="tk.mybatis.mapper.session.Configuration">
+        <property name="mapperProperties">
+            <value>
+                not-empty=false
+                safe-update=true
+                safe-delete=true
+                check-example-entity-class=true
+            </value>
+        </property>
+    </bean>
+
+</beans>

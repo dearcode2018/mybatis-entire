@@ -1,0 +1,43 @@
+
+mybatis Mapper接口参数分析
+
+1) 单个bean/entity
+
+2) 多个bean/entity 命名或无命名
+
+3) 单个Map
+
+4) 多个Map
+
+5) 单个基本类型
+
+6) 多个基本类型 命名或无命名
+
+7) 单个List
+
+8) 多个List 命名或无命名
+
+9) 组合型: Map中value是List、数组、bean
+
+分析: 在mybatis中，所有入参全部封装成Map结构，通过key或index来获取相应的值
+
+
+基本类型(8 个基本类型 + String)
+ * 说明: 在基本类型中，无论是单个还是多个，都必须通过@Param()标识其名称，才能通过名称的方式来引用，
+ * Parameter 'id' not found. Available parameters are [0, 1, 2, 3, param3, param4, param1, param2]
+没有命名的参数，命名默认为param1, param2, ...， 对应参数列表(从1开始)... 或0, 1, 2, ...(从0开始)，访问格式: #{0} #{1} ...
+
+单个基本类型的参数，必须使用@Param命名才能使用，而多个可以使用默认命名.
+
+单个map/bean可以直接使用map/bean/list中的key/属性作为索引即可，多个map/bean/list，则需要使用默认命名或者自主命名的方式.
+
+单个list默认名称是list，单个map/bean可以不用命名，单个基本类型的默认名称是value
+单个map或bean若命名，则再次放入一个Map中，因此 @Param注解的作用就是，将该参数放入一个统一入参的Map对象中，以其值
+作为key.
+
+单个: 有命名(使用@Param() 置入一个Map中)、无命名(List默认名称是list，Set类型的默认名称是set, 基本类型的默认名称是value)
+多个: 有命名(使用@Param() 置入一个Map中)、无命名(参数列表默认名称依次是 param1, param2, ...)
+
+【数据访问方式】
+bean/map/数组(包括Collection)访问方式: 属性名/key值/下标
+

@@ -1,0 +1,113 @@
+【项目信息】
+项目名称 : mybatis-tx
+中文名称 : 事务探索
+项目版本 : version 1.0
+
+主要技术 : 
+针对的MySQL下的事务运行状态
+项目描述 : 
+
+项目备注 : 
+
+【项目规划】
+
+1) 事务锁
+库、表、行、列，发生锁是服务端行为，并不是数据库客户端行为.
+表: 全部行被锁、新增/修改/删除列、
+行: 多个客户端要更新同一行数据，产生排队，先执行statement的优先，其他的等待
+以行为单位锁住，没有列级别的锁，一个表所有行锁住，并不代表锁全表，因为insert是可执行的.
+
+2) 探索场景
+a) 某个客户端对某条记录执行了update statement，但还没提交，其他客户端也要去update该记录的时候，发生等待，
+直至超时，会重启事务，(异常提醒: Lock wait timeout exceeded; try restarting transaction)
+查看锁等待超时时间，MySQL为: show variables where variable_name = 'innodb_lock_wait_timeout';
+set innodb_lock_wait_timeout = 10 #设置超时时间
+
+b) 上面的场景，若某个客户端对执行了的update statement长期没有commit甚至在自身生命周期内永远无法commit，
+那另外一个客户端要commit的时候，会无限期等待，事务超时能否解决此问题
+c) 在等待的过程，某些或所有连接都断开了(即没有主动close和服务端的连接)，观察数据库自身的处理，以及是否还有该锁的存在。
+结果: 客户端关闭之后，没有提交事务，数据库还是原先状态，是否主动关闭，服务端检测到该连接丢失或销毁了，则放弃该连接的待提交区.
+
+3) 制造锁场景
+A客户端update statement，断点，然后未执行commit
+B客户端的update statement遇到了和A客户端相同的行，进入等待状态，
+
+了解锁的过程，超时设置
+一个客户端要对被锁住的某行或多行执行update statement，会进入等待状态，直至超过 innodb_lock_wait_timeout 设置的时间
+4) 事务锁-解决方案
+a) 错开数据更新范围和时间，不更新同一个范围的数据和不在同一个时间更新有公共部分的数据
+b) 设置合理的事务超时时间/锁等待超时时间 -> statement 执行超时时间，减少锁等待时间，避免客户端无线等待，导致资源消耗殆尽
+c) 在发生长时间超时的时候，停止或取消执行该statement，转而去执行其他没有锁等待问题的statement
+
+5)
+
+9) 
+# MySQL服务端的超时时间: 全局有效，若客户端不设置，则使用该值.
+show variables like '%timeout%';
+
+connect_timeout: 客户端和服务端建立连接的超时时间，默认: 10s
+delayed_insert_timeout: 延迟插入超时时间，300s
+interactive_timeout: 交互超时时间，288800s 
+lock_wait_timeout: 锁等待时间，31536000s = 365 * 24 * 60 * 60s
+innodb_lock_wait_timeout: innodb 锁等待时间，通常是使用该值，默认 50s
+net_read_timeout: 读超时时间，
+net_write_timeout: 写超时时间
+wait_timeout: 空闲连接超时时间，单位: 秒，默认8h，28800s = 8 * 60 * 60s，超过次时间客户端没有任何动作则服务端关闭此连接
+
+10) 命令行客户端
+# 关闭自动提交
+set autocommit=0;
+# 查看锁等待超时时间
+show variables where variable_name = 'innodb_lock_wait_timeout';
+# 设置超时时间，时间单位: 秒
+set innodb_lock_wait_timeout=10
+
+15) 几个超时时间
+事务超时时间: 客户端行为，本地托管工具提供，此时间最终会关联到Statement执行超时时间
+Statement执行超时时间: 客户端行为
+锁等待超时: 服务端行为(MySQL.innoDB)，客户端是否也能设置 ?
+连接超时: 客户端行为，服务端也提供了默认参数
+哪个超时时间先到，则哪个先失败
+服务端提供的一些属性，是避免客户端没有设置或者不知道如何去设置，给客户端开启懒人模式.
+
+20) 事务超时时间设置
+ org.apache.ibatis.executor.statement.StatementUtil.applyTransactionTimeout
+ queryTimeout和transactionTimeout取较小值 设置到  statement.setQueryTimeout(transactionTimeout);
+ queryTimeout 取的是org.apache.ibatis.session.Configuration.setDefaultStatementTimeout();
+ transactionTimeout取的是DataSourceTransactionManager.setDefaultTimeout()或者@Transaction.timeout
+ transactionTimeout意义在于执行update statement之前的最大空闲时间，而StatementUtil.applyTransactionTimeout
+ 设置的值到了Statement的执行时间，对于有等待或执行超时的，事务会超时.
+
+Spring托管事务-检查事务是否超时
+org.apache.ibatis.executor.SimpleExecutor.prepareStatement()
+org.mybatis.spring.transaction.SpringManagedTransaction.getTimeout()
+org.springframework.transaction.support.ResourceHolderSupport.getTimeToLiveInSeconds -> checkTransactionTimeout 抛出TransactionTimedOutException
+ 
+21)
+/**
+ * 
+ * 描述: 验证事务超时的场景
+ * 结论
+ * 1) 开始事务: 从数据源获取连接对象，然后创建事务对象，开始生命周期
+ * 2) 事务超时定义: 从开启事务开始计时，执行每个 update statement就检查一次当前事务是否超时，超过则抛事务超时异常
+ * 3) 查询方法中，开启事务，执行select statement也会检查超时时间，因此如果是查询，就不要开启事务
+ * 4) 没有事务或者事务的超时时间为无限，才不会出现事务超时的情况
+ * 
+ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

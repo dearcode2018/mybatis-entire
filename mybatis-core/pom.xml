@@ -1,0 +1,93 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.hua</groupId>
+		<artifactId>mybatis-entire</artifactId>
+		<version>0.0.1</version>
+	</parent>	
+	<artifactId>mybatis-core</artifactId>
+	<packaging>jar</packaging>
+	<name>mybatis-core</name>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<!-- jdbc -->
+		<jdbc.mysql.version>8.0.20</jdbc.mysql.version>
+		<common.version>0.0.1</common.version>		
+		<mybatis.guice.version>3.6</mybatis.guice.version>
+		<mybatis.cache.version>1.0.0</mybatis.cache.version>
+		<mybatis.migrations.version>3.2.0</mybatis.migrations.version>
+		
+	</properties>
+
+	<dependencies>
+	
+		<dependency>
+			<groupId>com.hua</groupId>
+			<artifactId>common</artifactId>
+			<version>${common.version}</version>
+		</dependency>
+	
+       <dependency>
+           <groupId>mysql</groupId>
+           <artifactId>mysql-connector-java</artifactId>
+           <version>${jdbc.mysql.version}</version>
+       </dependency>
+
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis</artifactId>
+		</dependency>
+
+<!-- 		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis-guice</artifactId>
+			<version>${mybatis.guice.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis-ehcache</artifactId>
+			<version>${mybatis.cache.version}</version>
+			<exclusions>
+				<exclusion>
+			  <groupId>org.slf4j</groupId>
+			  <artifactId>slf4j-api</artifactId>				
+				</exclusion>
+			</exclusions>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis-hazelcast</artifactId>
+			<version>${mybatis.cache.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis-oscache</artifactId>
+			<version>${mybatis.cache.version}</version>
+			<exclusions>
+				<exclusion>
+				  <groupId>commons-logging</groupId>
+				  <artifactId>commons-logging</artifactId>
+       			 </exclusion>
+			</exclusions>
+		</dependency>				
+
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis-migrations</artifactId>
+			<version>${mybatis.migrations.version}</version>
+		</dependency>	 -->
+
+	<!--  -->
+	<dependency>
+	    <groupId>com.zaxxer</groupId>
+	    <artifactId>HikariCP</artifactId>
+	</dependency>
+
+	</dependencies>
+
+</project>

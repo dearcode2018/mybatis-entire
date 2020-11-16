@@ -1,0 +1,33 @@
+
+mybatis Mapper接口参数分析
+
+1) 单个bean/entity
+
+2) 多个bean/entity 命名或无命名
+
+3) 单个Map
+
+4) 多个Map
+
+5) 单个基本类型
+
+6) 多个基本类型 命名或无命名
+
+7) 单个List
+
+8) 多个List 命名或无命名
+
+9) 组合型: Map中value是List、数组、bean
+
+分析: 在mybatis中，所有入参全部封装成Map结构，通过key或index来获取相应的值
+
+
+
+
+
+
+
+
+
+
+
