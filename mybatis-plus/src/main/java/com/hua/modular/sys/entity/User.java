@@ -8,11 +8,11 @@ import lombok.experimental.Accessors;
 
 /**
  * <p>
- * 用户管理
+ * 
  * </p>
  *
  * @author qianye.zheng
- * @since 2020-11-16
+ * @since 2020-11-23
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -21,7 +21,7 @@ public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    /* 姓名 */
+    /* 名称 */
     @TableField("name")
     private String name;
 

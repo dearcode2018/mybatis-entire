@@ -82,7 +82,7 @@ public final class MyBatisGeneratorTest extends BaseTest {
 
             // 数据源配置
             DataSourceConfig dsc = new DataSourceConfig();
-            dsc.setUrl("jdbc:mysql://localhost:3306/mybatis?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai");
+            dsc.setUrl("jdbc:mysql://localhost:3306/generator?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai");
             // dsc.setSchemaName("public");
             dsc.setDriverName("com.mysql.cj.jdbc.Driver");
             dsc.setUsername("root");
@@ -144,7 +144,7 @@ public final class MyBatisGeneratorTest extends BaseTest {
             templateConfig.setMapper("template/mapper.java");
             templateConfig.setService("template/service.java");
             templateConfig.setServiceImpl("template/serviceImpl.java");
-            templateConfig.setXml("template/mapper.xml");
+            //templateConfig.setXml("template/mapper.xml");
             templateConfig.setController("template/controller.java");
             // 配置自定义输出模板
             //指定自定义模板路径，注意不要带上.ftl/.vm, 会根据使用的模板引擎自动识别
@@ -152,7 +152,7 @@ public final class MyBatisGeneratorTest extends BaseTest {
             // templateConfig.setService();
             // templateConfig.setController();
 
-            //templateConfig.setXml(null);
+            templateConfig.setXml(null);
             generator.setTemplate(templateConfig);
 
             // 策略配置
@@ -168,6 +168,7 @@ public final class MyBatisGeneratorTest extends BaseTest {
             // 写于父类中的公共字段
             strategy.setSuperEntityColumns("id");
             strategy.setInclude("user");
+            strategy.setEntityBuilderModel(true);
             strategy.setControllerMappingHyphenStyle(true);
             strategy.setTablePrefix(pc.getModuleName() + "_");
             // 生成实体字段的注解，则无需xml文件
