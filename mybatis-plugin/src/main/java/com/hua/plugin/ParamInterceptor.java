@@ -38,7 +38,7 @@ public class ParamInterceptor implements Interceptor {
 	public Object intercept(Invocation invocation) throws Throwable {
 		Object[] args = invocation.getArgs();
 		PreparedStatement ps = (PreparedStatement) args[0];
-
+		//DefaultParameterHandler handler = () invocation.getTarget();
 		Object obj = invocation.proceed();
 		
 		return obj;

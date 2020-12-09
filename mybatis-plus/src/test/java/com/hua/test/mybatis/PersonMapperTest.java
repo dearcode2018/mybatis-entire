@@ -38,8 +38,10 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hua.ApplicationStarter;
-import com.hua.entity.Person;
-import com.hua.mapper.PersonMapper;
+import com.hua.configuration.DynamicTableNameContex;
+import com.hua.entity.DynamicTableEntity;
+import com.hua.modular.sys.entity.Person;
+import com.hua.modular.sys.mapper.PersonMapper;
 import com.hua.test.BaseTest;
 import com.hua.util.StringUtil;
 
@@ -114,7 +116,6 @@ public final class PersonMapperTest extends BaseTest {
 			entity.setName("广州新港西路-张三");
 			entity.setNation("汉族");
 			//entity.setPhotoUrl("https://photo.icon");
-			entity.setBirthday(new Date());
 			int result = personMapper.insert(entity);
 			assertEquals(1, result);
 			
@@ -136,8 +137,7 @@ public final class PersonMapperTest extends BaseTest {
 			Person entity = new Person();
 			entity.setName("广州新港西路-张三");
 			entity.setNation("汉族");
-			//entity.setPhotoUrl("https://photo.icon");
-			entity.setBirthday(new Date());
+			DynamicTableNameContex.setTableName("1person_01");
 			int result = personMapper.insert(entity);
 			assertEquals(1, result);
 			
@@ -162,7 +162,6 @@ public final class PersonMapperTest extends BaseTest {
 				entity.setName("广州新港西路-张三");
 				entity.setNation("汉族");
 				//entity.setPhotoUrl("https://photo.icon");
-				entity.setBirthday(new Date());
 				int result = personMapper.insert(entity);
 				assertEquals(1, result);
 			}
@@ -183,11 +182,11 @@ public final class PersonMapperTest extends BaseTest {
 	public void testUpdateById() {
 		try {
 			Person entity = new Person();
-			entity.setName("广州新港西路-张三2222");
-			entity.setNation("汉族1");
+			entity.setId(20);
+			entity.setName("广州新港西路-张三2222update");
+			entity.setNation("汉族1update");
+	         entity.setDynamicTableName("perso1n_01");
 			//entity.setPhotoUrl("https://photo.icon");
-			entity.setBirthday(new Date());
-			entity.setOid(13);
 			int result = personMapper.updateById(entity);
 			assertTrue(result > 0);
 			
@@ -210,10 +209,10 @@ public final class PersonMapperTest extends BaseTest {
 			//entity.setName("广州新港西路-张三888");
 			entity.setNation("汉族new");
 			//entity.setPhotoUrl("https://photo.icon");
-			entity.setBirthday(new Date());
-			entity.setOid(13);
+			//entity.setId(20);
+			entity.setDynamicTableName("person_01");
 			QueryWrapper<Person> queryWrapper = new QueryWrapper<>();
-			String value = "汉族";
+			String value = "汉族1update";
 			queryWrapper.and(StringUtil.isNotEmpty(value), x -> x.eq("nation", value));
 			int result = personMapper.update(entity, queryWrapper);
 			assertTrue(result > 0);
@@ -234,11 +233,13 @@ public final class PersonMapperTest extends BaseTest {
 	public void testDeleteByCondition() {
 		try {
 			QueryWrapper<Person> queryWrapper = new QueryWrapper<>();
-			String value = "汉族";
+			Person entity = new Person();
+			entity.setDynamicTableName("person_01");
+			queryWrapper.setEntity(entity);
+			String value = "汉族new1";
 			queryWrapper.and(StringUtil.isNotEmpty(value), x -> x.like("nation", "%" + value + "%"));
 			int result = personMapper.delete(queryWrapper);
 			assertTrue(result > 0);
-			
 		} catch (Exception e) {
 			log.error("testDeleteByCondition =====> ", e);
 		}

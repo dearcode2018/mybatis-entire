@@ -35,8 +35,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.hua.ApplicationStarter;
-import com.hua.entity.Person;
-import com.hua.mapper.PersonMapper;
+import com.hua.modular.sys.entity.Person;
+import com.hua.modular.sys.mapper.PersonMapper;
 import com.hua.test.BaseTest;
 
 
@@ -105,12 +105,10 @@ public final class MyBatisPlusTest extends BaseTest {
 	@Test
 	public void testMapper() {
 		try {
-			
 			Person entity = new Person();
 			entity.setName("广州新港西路-张三");
 			entity.setNation("汉族");
 			//entity.setPhotoUrl("https://photo.icon");
-			entity.setBirthday(new Date());
 			int result = personMapper.insert(entity);
 			assertEquals(1, result);
 			

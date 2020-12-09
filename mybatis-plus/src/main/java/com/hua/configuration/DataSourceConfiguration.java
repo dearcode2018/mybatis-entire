@@ -13,9 +13,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 import com.alibaba.druid.pool.DruidDataSource;
-import com.baomidou.mybatisplus.core.injector.ISqlInjector;
-import com.baomidou.mybatisplus.extension.injector.LogicSqlInjector;
-import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.inner.DynamicTableNameInnerInterceptor;
+import com.hua.interceptor.DynamicTableNameInterceptor;
 
 /**
  * @type DataSourceConfiguration
@@ -36,25 +36,23 @@ public class DataSourceConfiguration {
 	/* 单位未知 */
 	//@Value("${mybatis.defaultStatement.timeout:5000}")
 	//private int defaultStatementTimeout;
-	
-
-	/**
-	 * 
-	 * @description 分页拦截器
-	 * 代理执行  select count(*) from xx where 与列表搜索条件相同
-	 * @return
-	 * @author qianye.zheng
-	 */
+    
+ 
+    /**
+     * 
+     * @description 
+     * @return
+     * @author qianye.zheng
+     */
     @Bean
-    public PaginationInterceptor paginationInterceptor() {
-        return new PaginationInterceptor();
+    public MybatisPlusInterceptor interceptor() {
+        final MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
+        final DynamicTableNameInnerInterceptor tbNameInterceptor = new DynamicTableNameInterceptor();
+        interceptor.addInnerInterceptor(tbNameInterceptor);
+        
+        return interceptor;
     }
     
-    @Bean
-    public ISqlInjector sqlInjector() {
-        return new LogicSqlInjector();
-    }
-	
 	/**
 	 * 
 	 * @description 构造数据源/连接池
