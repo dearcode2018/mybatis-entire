@@ -111,4 +111,18 @@ class ${entity} : Serializable {
 #end
         "}"
     }
+    
+     /**
+     * 
+     * @description 构造动态表名
+     * @param dynamicTableName
+     * @return
+     * @author ${author}
+     */
+    public static final ${entity} dynamicTable(final String dynamicTableName) {
+        final ${entity} entity = new ${entity}();
+        entity.setDynamicTableName(dynamicTableName);
+        
+        return entity;
+    }
 }

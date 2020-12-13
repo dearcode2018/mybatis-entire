@@ -42,6 +42,7 @@ import com.baomidou.mybatisplus.generator.config.TemplateConfig;
 import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
+import com.hua.entity.DynamicTableEntity;
 import com.hua.test.BaseTest;
 
 
@@ -167,6 +168,7 @@ public final class MyBatisGeneratorTest extends BaseTest {
             //strategy.setSuperControllerClass("你自己的父类控制器,没有就不用设置!");
             // 写于父类中的公共字段
             //strategy.setSuperEntityColumns("id");
+            strategy.setSuperEntityClass(DynamicTableEntity.class);
             strategy.setInclude("person");
             //strategy.setEntityBuilderModel(true);
             strategy.setControllerMappingHyphenStyle(true);

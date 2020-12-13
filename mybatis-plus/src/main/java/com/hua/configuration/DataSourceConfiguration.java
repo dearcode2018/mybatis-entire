@@ -15,7 +15,8 @@ import org.springframework.context.annotation.Import;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.DynamicTableNameInnerInterceptor;
-import com.hua.interceptor.DynamicTableNameInterceptor;
+import com.hua.interceptor.ADynamicTableNameInterceptor;
+import com.hua.interceptor.DynamicTableInterceptor;
 
 /**
  * @type DataSourceConfiguration
@@ -47,8 +48,9 @@ public class DataSourceConfiguration {
     @Bean
     public MybatisPlusInterceptor interceptor() {
         final MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
-        final DynamicTableNameInnerInterceptor tbNameInterceptor = new DynamicTableNameInterceptor();
-        interceptor.addInnerInterceptor(tbNameInterceptor);
+        //final DynamicTableNameInnerInterceptor tbNameInterceptor = new ADynamicTableNameInterceptor();
+        //interceptor.addInnerInterceptor(tbNameInterceptor);
+        interceptor.addInnerInterceptor(new DynamicTableInterceptor());
         
         return interceptor;
     }
