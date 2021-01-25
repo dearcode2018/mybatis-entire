@@ -78,7 +78,7 @@ public class DynamicTableInterceptor implements InnerInterceptor {
                 final Field field = BoundSql.class.getDeclaredField("sql");
                 // 允许访问和设置
                 field.setAccessible(true);
-                // 替换表名
+                // 替换表名 ，用波浪号把 @Table中的表名包围起来
                 final String sql = field.get(boundSql).toString().replace(logicalTableName, realTableName);
                 field.set(boundSql, sql);
             }

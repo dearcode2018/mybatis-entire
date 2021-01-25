@@ -15,11 +15,11 @@
 	<packaging>jar</packaging>
 	
 	<properties>
-		<mybatis.core.version>0.0.1</mybatis.core.version>
+		<mybatis.core.version>1.0.0</mybatis.core.version>
 		<mybatisplus.version>3.4.1</mybatisplus.version>
 		<druid.version>1.1.22</druid.version>	
 		<velocity.version>2.2</velocity.version>
-		<web.version>0.0.1</web.version>	
+		<web.version>1.0.0</web.version>	
    		<jpa.version>1.0.2</jpa.version>			
 	</properties>
 

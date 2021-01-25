@@ -16,12 +16,12 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author qianye.zheng
- * @since 2020-12-13
+ * @since 2020-12-14
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
-@TableName("person")
+@TableName("`person`")
 public class Person extends DynamicTableEntity {
 
     private static final long serialVersionUID = 1L;

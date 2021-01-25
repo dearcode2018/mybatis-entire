@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.hua</groupId>
   <artifactId>mybatis-entire</artifactId>
-  <version>0.0.1</version>
+  <version>1.0.0</version>
   <packaging>pom</packaging>
   <name>mybatis-entire</name>
   <description>mybatis Maven Entire Project</description>
@@ -34,7 +34,7 @@
 	<properties>
 		<jdk.version>1.8</jdk.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.version>0.0.1</maven.version>
+		<maven.version>1.0.0</maven.version>
 		<maven.plugin.compiler.version>3.3</maven.plugin.compiler.version>
 		<maven.plugin.source.version>2.4</maven.plugin.source.version>
 		<maven.plugin.surefire.version>2.18.1</maven.plugin.surefire.version>
@@ -42,8 +42,8 @@
 		<maven.plugin.resources.version>2.7</maven.plugin.resources.version>
 		<maven.plugin.dependency.version>2.10</maven.plugin.dependency.version>
 		<maven.plugin.war.version>3.0</maven.plugin.war.version>
-		<mybatis.core.version>0.0.1</mybatis.core.version>
-		<orm.version>0.0.1</orm.version>
+		<mybatis.core.version>1.0.0</mybatis.core.version>
+		<orm.version>1.0.0</orm.version>
 		<mybatis.guice.version>3.6</mybatis.guice.version>
 		<mybatis.cache.version>1.0.0</mybatis.cache.version>
 		<mybatis.migrations.version>3.2.0</mybatis.migrations.version>		
@@ -57,13 +57,41 @@
 		<mybatis.spring.version>2.0.5</mybatis.spring.version>	
 		<hikaricp.version>3.1.0</hikaricp.version>
        <pagehelper.version>5.1.8</pagehelper.version>		
-	   <mybatis.core.version>0.0.1</mybatis.core.version>    
-       <jpa.version>1.0.2</jpa.version>		   				                 		
+	   <mybatis.core.version>1.0.0</mybatis.core.version>    
+       <jpa.version>1.0.2</jpa.version>	
+ 	   <commons.dbcp2.version>2.7.0</commons.dbcp2.version>	
+ 	   <common.version>1.0.0</common.version>   
+		<jdbc.mysql.version>8.0.20</jdbc.mysql.version>	     	   				                 		
 	</properties>  
   
 	<!-- 依赖管理 -->
 	<dependencyManagement>
 		<dependencies>
+
+		<dependency>
+			<groupId>com.hua</groupId>
+			<artifactId>common</artifactId>
+			<version>${common.version}</version>
+		</dependency>
+		
+			<dependency>
+				<groupId>com.hua</groupId>
+				<artifactId>mybatis-core</artifactId>
+				<version>${mybatis.core.version}</version>
+			</dependency>		
+
+       <dependency>
+           <groupId>mysql</groupId>
+           <artifactId>mysql-connector-java</artifactId>
+           <version>${jdbc.mysql.version}</version>
+       </dependency>
+	
+		<dependency>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-dbcp2</artifactId>
+		    <version>${commons.dbcp2.version}</version>
+		</dependency>	
+		
         <dependency>
             <groupId>tk.mybatis</groupId>
             <artifactId>mapper</artifactId>
@@ -228,6 +256,12 @@
                 <artifactId>persistence-api</artifactId>
                 <version>${jpa.version}</version>
             </dependency>
+
+			<dependency>
+				<groupId>com.hua</groupId>
+				<artifactId>mybatis-core</artifactId>
+				<version>${mybatis.core.version}</version>
+			</dependency>
 		
 		</dependencies>
         	

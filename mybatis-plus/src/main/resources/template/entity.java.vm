@@ -31,7 +31,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 #end
 #if(${table.convert})
-@TableName("${table.name}")
+@TableName("`${table.name}`")
 #end
 #if(${swagger2})
 @ApiModel(value="${entity}对象", description="$!{table.comment}")

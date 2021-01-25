@@ -5,17 +5,13 @@
 	<parent>
 		<groupId>com.hua</groupId>
 		<artifactId>mybatis-entire</artifactId>
-		<version>0.0.1</version>
+		<version>1.0.0</version>
 	</parent>	
 	<artifactId>mybatis-tx</artifactId>
 	<packaging>jar</packaging>
 	<name>mybatis-tx</name>
 	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		
-		<com.hua.mybatis.version>0.0.1</com.hua.mybatis.version>
-		<mybatis.version>3.5.5</mybatis.version>
-		<commons.dbcp2.version>2.7.0</commons.dbcp2.version>			
+
 	</properties>
 
 	<dependencies>
@@ -23,19 +19,16 @@
 		<dependency>
 			<groupId>com.hua</groupId>
 			<artifactId>mybatis-core</artifactId>
-			<version>${com.hua.mybatis.version}</version>
 		</dependency>
 
 		<dependency>
 		    <groupId>org.apache.commons</groupId>
 		    <artifactId>commons-dbcp2</artifactId>
-		    <version>${commons.dbcp2.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.mybatis</groupId>
 			<artifactId>mybatis</artifactId>
-			<version>${mybatis.version}</version>
 		</dependency>
 		
 	</dependencies>
